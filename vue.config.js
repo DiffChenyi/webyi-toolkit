@@ -2,7 +2,12 @@ const path = require('path')
 module.exports = {
     publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
     outputDir:"docs",
+    lintOnSave: process.env.NODE_ENV !== 'production',
     devServer: {
+        overlay: {
+          warnings: true,
+          errors: true
+        },
         port: 8090,
         open: true,
         host: "0.0.0.0",
@@ -16,7 +21,7 @@ module.exports = {
                     '^/api': '',
                 },
             },
-        },
+        }
     },
     configureWebpack:{
       resolve: {
