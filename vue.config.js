@@ -1,6 +1,7 @@
 const path = require('path')
 module.exports = {
     publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+    outputDir:"docs",
     devServer: {
         port: 8090,
         open: true,

@@ -20,12 +20,12 @@ const router = new VueRouter({
       component: () => import('@/views/test'),
     },
     {
-      path: '/live',
-      name: 'Live',
+      path: '/xing',
+      name: 'Xing',
       meta:{
-        title:'直播'
+        title:'Xing'
       },
-      component: () => import('@/views/live'),
+      component: () => import('@/views/live/xing'),
     },
     {
         path: '/*',

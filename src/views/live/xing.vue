@@ -1,20 +1,21 @@
 <template>
   <div>
-    <div>
-      <el-button class="cover-button">
-        上传文件
-        <!-- 必须要使用原生input，才能获取到file类型的事件回调参数 -->
-        <input type="file" ref="uploaderQuery" @change="changeFile" class="cover-button__input" />
-      </el-button>
-      <el-button type="danger" @click="resetFile">重置文件</el-button>
-    </div>    
+    <el-button class="cover-button">
+      <span class="cover-button__text">上传文件</span>
+      <!-- 必须要使用原生input，才能获取到file类型的事件回调参数 -->
+      <input type="file" ref="uploaderQuery" @change="changeFile" class="cover-button__input" />
+    </el-button> 
+    <br/>  
+    <br/>  
+    <el-button type="danger" @click="resetFile" :disabled="!hasFile">重置文件</el-button>
+
     <el-row>
       <el-col :span="8" v-for="(item) in lives" :key="item.uid">
         <el-card :body-style="{ padding: '0px' }">
-            <img :src="item.thumb" class="image" @error="listenImageError(item)" v-if="item.thumb">
-            <div class="cover-empty" v-else>封面已失效</div>
+            <img class="live-image" :src="item.thumb" @error="listenImageError(item)" v-if="item.thumb">
+            <div class="live-image-empty" v-else>封面已失效</div>
 
-            <div style="padding: 15px;height:120px;">
+            <div class="live-info">
               <div>人气：{{item.nums}}</div>
               <div>标题：{{item.title || '无'}}</div>
               <div>名称：{{item.user_nicename}}</div>
@@ -28,36 +29,15 @@
 
 <script>
 export default {
-  name:"Live",
+  name:"LiveXing",
   data(){
     return {
-      fields:{
-        content:"",
-        secret:""
-      },
-      rules: {
-        content: [
-          {
-            required: true,
-            message: "content不能为空",
-            trigger: "blur",
-          },
-        ],
-        secret: [
-          {
-            required: true,
-            message: "secret不能为空",
-            trigger: "blur",
-          },
-        ],
-      },
-      lives:[],
-      jsonFile:""
+      lives:[]
     }
   },
   computed:{
-    isFile(){
-      return this.$refs.uploaderQuery.value;
+    hasFile(){
+      return this.$refs.uploaderQuery && this.$refs.uploaderQuery.value;
     }
   },
   methods:{
@@ -80,24 +60,6 @@ export default {
       if(this.$refs.uploaderQuery.value){
         this.$refs.uploaderQuery.value = null;
       }
-    },
-    submitForm(){
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$message({
-            type:'success',
-            message:'提交成功生成中...'
-          })
-        }
-      });
-    },
-    resetForm(){
-      this.$refs.resetForm.resetFields();
-    },
-    joinLiveRoom(item){
-      this.$router.push({
-        path:`/live/room/${item.stream}?pull=${item.pull}`
-      })
     },
     listenImageError(item){
       const _index = this.lives.findIndex((v)=> v.uid === item.uid)
@@ -124,6 +86,10 @@ export default {
 <style scoped>
 .cover-button{
   position:relative;
+  overflow:hidden;
+}
+.cover-button__text{
+  cursor:pointer;
 }
 .cover-button__input{
   position: absolute;
@@ -132,8 +98,14 @@ export default {
   bottom: 0;
   left: 0;
   opacity: 0;
+  cursor:pointer;
 }
-.cover-empty{
+.live-image {
+  width: 100%;
+  height: 150px;
+  display: block;
+}
+.live-image-empty{
   width: 100%;
   height: 150px;
   line-height: 150px;
@@ -142,34 +114,8 @@ export default {
   background-color:#f4f4f4;
   text-align:center;
 }
-.time {
-    font-size: 13px;
-    color: #999;
-  }
-  
-  .bottom {
-    margin-top: 13px;
-    line-height: 12px;
-  }
-
-  .button {
-    padding: 0;
-    float: right;
-  }
-
-  .image {
-    width: 100%;
-    height: 150px;
-    display: block;
-  }
-
-  .clearfix:before,
-  .clearfix:after {
-      display: table;
-      content: "";
-  }
-  
-  .clearfix:after {
-      clear: both
-  }
+.live-info{
+  padding: 15px;
+  height: 120px;
+}
 </style>
